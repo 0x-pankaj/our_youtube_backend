@@ -1,0 +1,16 @@
+{
+  "name": "ouryoutube",
+  "version": "1.0.0",
+  "description": "a complete  backend ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "backend",
+    "express"
+  ],
+  "author": "pankaj",
+  "license": "ISC"
+}
