@@ -10,7 +10,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
     const accessToken = await user.generateAccessToken();
+    console.log("accessToken: while generating", accessToken);
     const refreshToken = await user.generateRefreshToken();
+    console.log("refreshToken: while generating", refreshToken);
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false }); // check while error Todo
     return { accessToken, refreshToken };
@@ -128,6 +130,7 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
 
+
   const logedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
@@ -137,8 +140,8 @@ const loginUser = asyncHandler(async (req, res) => {
     secure: true,
   };
 
-  // console.log("accessToken: ", accessToken);
-  // console.log("refreshToken: ", refreshToken);
+  console.log("accessToken: from login route ", accessToken);
+  console.log("refreshToken: from login route ", refreshToken);
 
   return res
     .status(200)
@@ -211,7 +214,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "refreshToken expired");
     }
 
-    const { accessToken, newRefreshToken } =
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshTokens(user._id);
 
     const options = {
@@ -221,14 +224,14 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", newRefreshToken, options)
+      .cookie("accessToken", newAccessToken, options)
+      .cookie("refreshToken", newAccessToken, options)
       .json(
         new ApiResponse(
           200,
           {
-            accessToken,
-            refreshToken: newRefreshToken,
+            newAccessToken,
+            newRefreshToken,
           },
           "Acess token refreshed"
         )
