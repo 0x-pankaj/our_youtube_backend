@@ -275,8 +275,11 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
+  console.log("req: ", req.body);
   const { fullName, email } = req.body;
-  if (!fullName || !email) {
+  console.log("from updateAcoount : ");
+  console.log("fullName: ",fullName, email)
+  if (!fullName && !email) {
     throw new ApiError(400, "must have atleast one field to update");
   }
 
@@ -299,6 +302,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
+  console.log("req.file from updateUserAvatar: ", req.file);
   const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) {
     throw new ApiError(400, "avatar file is missing");
@@ -353,7 +357,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
-  const userName = req.params;
+  const {userName} = req.params;
+  console.log("userName: ",userName);
   if (!userName?.trim()) {
     throw new ApiError(400, " not getting channel name from url as parameter");
   }
@@ -409,7 +414,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       },
     },
   ]);
-
+  // console.log("channel: ", channel);
   if (!channel?.length) {
     throw new ApiError(404, "channel doesn't exist");
   }
@@ -427,13 +432,20 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 
 const getWatchHistory = asyncHandler(async (req, res) => {
   console.log("getWatchHistory: triggered");
-  console.log("user: ", req.user);
+  // console.log("user: ", req.user._id.toString());
+  // console.log("user id type: ", typeof(req.user._id))
+  // const array = Object.keys(req.user)
+  // console.log("array: ", array)
+  // console.log("user id : ", req.user._id[1])
+  console.log("user id: ", req.user._id);
+  console.log("new user id only: ", new mongoose.Types.ObjectId(req.user._id) );
 
   try {
     const user = await User.aggregate([
       {
         $match: {
-          _id: new mongoose.Schema.Types.ObjectId(req.user._id),
+          // _id : new mongoose.Types.ObjectId(req.user._id),
+          _id: req.user._id
         },
       },
       {
@@ -471,6 +483,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         },
       },
     ]);
+    console.log("user from history matching: ",user);
 
     return res
               .status(200)
