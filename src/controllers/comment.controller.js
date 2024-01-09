@@ -11,7 +11,7 @@ const getVideoComments = asyncHandler(async(req,res)=> {
     console.log("from getVideoComments");
     const { videoId} = req.params;
     console.log(videoId);
-    const { page=1,limit=10} = req.query;
+    const { page=1,limit=2} = req.query;
 
     if(!videoId){
         throw new ApiError(400, "video id is required")
@@ -51,6 +51,37 @@ const getVideoComments = asyncHandler(async(req,res)=> {
             }
         }
     ])
+    const options = {
+        page: page,
+        limit: limit
+    }
+    /*
+    Comment.aggregatePaginate(allComment, options)
+        .then(function (result){
+            console.log(result.docs);
+        })
+        .catch((error)=> {
+            console.log(error)
+        })
+        */
+
+        /*
+    Comment.aggregatePaginate(allComment, options, function(err,result){
+        if(!err){
+            console.log( result.itemList)
+        }
+        else {
+            console.log(err)
+        }
+    })
+    */
+
+
+     // console.log("allcomments: ", allComment);;
+    
+
+
+
     res
         .status(200)
         .json(
