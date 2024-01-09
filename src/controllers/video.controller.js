@@ -8,6 +8,29 @@ import mongoose from "mongoose";
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
 
+  if(!userId){
+    throw new ApiError(400, "userId is required")
+  }
+
+  if(!page || !limit){
+    throw new ApiError(400, "page and limit is required");
+  }
+  const options = {
+    page: page,
+    limit: limit
+  }
+
+  await Video.aggregate([
+    {
+       $match: {
+        
+       }
+    }
+  ])
+
+
+
+  
    
 
 
@@ -122,7 +145,7 @@ const getVideoById = asyncHandler(async(req,res)=> {
   res
       .status(200)
       .json(
-        new ApiResponse(200, video, "successFully getVideo by id")
+        new ApiResponse(200, video[0], "successFully getVideo by id")
       )
 
   
