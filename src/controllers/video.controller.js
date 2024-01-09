@@ -129,6 +129,7 @@ const getVideoById = asyncHandler(async(req,res)=> {
         ]
       }
     },
+    // addFields with same name override the owner field and $first return first object from arr of owner field basically make res less nested 
     {
       $addFields: {
         owner: {
