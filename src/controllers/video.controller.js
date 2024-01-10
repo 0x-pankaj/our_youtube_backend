@@ -6,36 +6,98 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose from "mongoose";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-
+  const { page = 1, limit = 10, query, sortBy, sortType } = req.query;
+/*
   if(!userId){
     throw new ApiError(400, "userId is required")
   }
 
-  if(!page || !limit){
+  if (!page || !limit) {
     throw new ApiError(400, "page and limit is required");
   }
   const options = {
     page: page,
-    limit: limit
+    limit: limit,
+  };
+
+*/
+
+  if (query) {
+    const video = await Video.aggregate([
+      {
+        $match: {
+          $or: [
+            {
+              title: { $regex: `${query}`, $options: "i" },
+            },
+            {
+              description: { $regex: `${query}`, $options: "i" },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+          pipeline: [
+            {
+              $project: {
+                userName: 1,
+                fullName: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          owner: {
+            $first: "$owner",
+          },
+        },
+      },
+    ]);
+
+    res.status(200).json(new ApiResponse(200, video, "successFully searched"));
+  } else {
+    const video = await Video.aggregate([
+      {
+        $match: {
+          videoFile: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+          pipeline: [
+            {
+              $project: {
+                userName: 1,
+                fullName: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          owner: {
+            $first: "$owner",
+          },
+        },
+      },
+    ]);
+
+    res.status(200).json(new ApiResponse(200, video, "get all videos"));
   }
-
-  await Video.aggregate([
-    {
-       $match: {
-        
-       }
-    }
-  ])
-
-
-
-  
-   
-
-
-
-
 });
 
 const publishVideo = asyncHandler(async (req, res) => {
@@ -99,17 +161,17 @@ const getVideoById = asyncHandler(async (req, res) => {
 });
 */
 
-const getVideoById = asyncHandler(async(req,res)=> {
+const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  if(!videoId){
+  if (!videoId) {
     throw new ApiError(400, "must have video id");
   }
 
   const video = await Video.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(videoId)
-      }
+        _id: new mongoose.Types.ObjectId(videoId),
+      },
     },
     {
       $lookup: {
@@ -123,36 +185,30 @@ const getVideoById = asyncHandler(async(req,res)=> {
               fullName: 1,
               avatar: 1,
               views: 1,
-              createdAt: 1
-            }
-          }          
-        ]
-      }
+              createdAt: 1,
+            },
+          },
+        ],
+      },
     },
-    // addFields with same name override the owner field and $first return first object from arr of owner field basically make res less nested 
+    // addFields with same name override the owner field and $first return first object from arr of owner field basically make res less nested
     {
       $addFields: {
         owner: {
-          $first: "$owner"
-        }
-      }
-    }
-  ])
-  if(!video){
-    throw new ApiError(400, "invalid video Id")
+          $first: "$owner",
+        },
+      },
+    },
+  ]);
+  if (!video) {
+    throw new ApiError(400, "invalid video Id");
   }
   console.log("video : ", video);
 
   res
-      .status(200)
-      .json(
-        new ApiResponse(200, video[0], "successFully getVideo by id")
-      )
-
-  
-
-})
-
+    .status(200)
+    .json(new ApiResponse(200, video[0], "successFully getVideo by id"));
+});
 
 /*
 const updateVideo = asyncHandler(async (req, res) => {
@@ -242,24 +298,19 @@ const deleteVideo = asyncHandler(async (req, res) => {
 const togglePublishStatus = asyncHandler(async (req, res) => {
   console.log("from togglePUblishStatus");
   const { videoId } = req.params;
-  if(!videoId){
+  if (!videoId) {
     throw new ApiError(400, "must have videoId");
   }
 
   const video = await Video.findById(videoId);
 
-  if(!video){
+  if (!video) {
     throw new ApiError(400, "video doesn't exist");
   }
-  video.isPublished = !video.isPublished
+  video.isPublished = !video.isPublished;
   await video.save();
 
-  res
-      .status(200)
-      .json(
-        new ApiResponse(200, video, "publish status toggled")
-      )
-
+  res.status(200).json(new ApiResponse(200, video, "publish status toggled"));
 });
 
 export {
