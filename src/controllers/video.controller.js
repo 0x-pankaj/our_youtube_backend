@@ -5,22 +5,10 @@ import { Video } from "../models/video.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose from "mongoose";
 
+
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType } = req.query;
-/*
-  if(!userId){
-    throw new ApiError(400, "userId is required")
-  }
+  const { page = 1, limit = 3, query, sortBy, sortType } = req.query;
 
-  if (!page || !limit) {
-    throw new ApiError(400, "page and limit is required");
-  }
-  const options = {
-    page: page,
-    limit: limit,
-  };
-
-*/
 
   if (query) {
     const video = await Video.aggregate([
@@ -96,9 +84,48 @@ const getAllVideos = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json(new ApiResponse(200, video, "get all videos"));
+   const videos = await Video.aggregatePaginate(video, {
+      page: page,
+      limit: limit
+    })
+
+    res.status(200).json(new ApiResponse(200, videos, "get all videos"));
   }
 });
+
+/*
+
+const getAllVideos = asyncHandler(async (req, res)=> {
+  const { page= 1, limit= 3, query, sortBy , sortType, userId} = req.query;
+
+  const videoQuery = {};
+  if(query){
+    videoQuery.$or = [
+      {title: {$regex: query, $options: "i"} },
+      {description: {$regex: query, $options: "i"}}
+    ]
+  }
+
+  if(userId){
+    videoQuery.owner = userId;
+  }
+
+  const sortOptions = {}
+  if(sortBy && sortType){
+    sortOptions[sortBy] = sortType === 'desc'? '-1' : '1';
+  }
+
+  const videos = await Video.aggregatePaginate(videoQuery, {
+    page: parseInt(page),
+    limit: parseInt(limit),
+  })
+
+  return res.status(201).json(
+    new ApiResponse(200, videos, "Videos retrieved successfully..")
+);
+
+})
+*/
 
 const publishVideo = asyncHandler(async (req, res) => {
   console.log("from publishVideo");
