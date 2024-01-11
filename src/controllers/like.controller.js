@@ -47,7 +47,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
   if (!commentId) {
     throw new ApiError(400, "comment id is required");
   }
-  const toggleComment = await Comment.aggregate([
+  const toggleComment = await Like.aggregate([
     {
       $match: {
         $and: [
@@ -73,7 +73,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     await Like.findByIdAndDelete(toggleComment[0]._id);
     res
       .status(200)
-      .json(200, { isLiked: false }, "successfully unliked comment");
+      .json(new ApiResponse(200, { isLiked: false }, "successfully unliked comment"));
   }
 });
 
