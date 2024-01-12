@@ -47,9 +47,6 @@ router
 router.route("/c/:userName").get(verifyJWT, getUserChannelProfile);
 router.route("/watchhistory").get(verifyJWT, getWatchHistory);
 
-// router.route("/abc",).get((req,res)=> {
-//   console.log("req: ", req);
-//   res.send("abc");
-// })
+
 
 export default router;

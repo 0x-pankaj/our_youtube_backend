@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 3, query, sortBy, sortType } = req.query;
+  const { page = 1, limit = 3, query, sortBy, sortType, userId } = req.query;
 
 
   if (query) {
