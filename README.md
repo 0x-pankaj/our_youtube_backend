@@ -13,6 +13,17 @@ Welcome to the backend repository of our YouTube-like app. This backend is respo
 - **ORM:** Mongoose
 - **Storage:** Cloudinary
 
+## Key Features
+
+- ** Video Management **
+- ** Playlist Managmet **
+- ** User Interaction **
+    - *** Likes on videos ***
+    - *** Comment on Videos **
+- ** Tweet Segment ** 
+    - *** user tweet like on tweeter ***
+    - *** like on Tweet ***
+
 ## Prerequisites
 
 Make sure you have the following installed on your machine:
@@ -29,6 +40,7 @@ Make sure you have the following installed on your machine:
    ```bash
    git clone https://github.com/0x-pankaj/our_youtube_backend.git
    cd our_youtube_backend
+   ```
 
 
 ## Install Dependencies 
@@ -37,17 +49,17 @@ Make sure you have the following installed on your machine:
 ```
 ## Set Up Environment Variables
  
-PORT=8000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.vznzlsd.mongodb.net
-CORS_ORIGIN= *
-ACCESS_TOKEN_SECRET=d7vm4vBCvetpCbJENpUpvojqp50iGPYDm7yM
-ACCESS_TOKEN_EXPIRY=1d
-REFRESH_TOKEN_SECRET=o7JeWjtQxroLtbHSHtoFt1cecpMvCtsRB4E=
-REFRESH_TOKEN_EXPIRY=10d
+- **PORT**=8000
+- **MONGODB_URI**=mongodb+srv://<username>:<password>@cluster0.vznzlsd.mongodb.net
+- **CORS_ORIGIN**= *
+- **ACCESS_TOKEN_SECRET**=d7vm4vBCvetpCbJENpUpvojqp50iGPYDm7yM
+- **ACCESS_TOKEN_EXPIRY**=1d
+- **REFRESH_TOKEN_SECRET**=o7JeWjtQxroLtbHSHtoFt1cecpMvCtsRB4E=
+- **REFRESH_TOKEN_EXPIRY**=10d
 
-CLOUDINARY_CLOUD_NAME=cloudname
-CLOUDINARY_API_KEY=api_key
-CLOUDINARY_API_SECRET=api_secret
+- **CLOUDINARY_CLOUD_NAME**=cloudname
+- **CLOUDINARY_API_KEY**=api_key
+- **CLOUDINARY_API_SECRET**=api_secret
 
 
 ## Run The Server
@@ -58,9 +70,9 @@ CLOUDINARY_API_SECRET=api_secret
    
 
 ## Api Structure
-** [API-REFERENCRE](https://documenter.getpostman.com/view/25927324/2s9YsMBXPn) **
+-  [API-REFERENCRE](https://documenter.getpostman.com/view/25927324/2s9YsMBXPn) 
 
 ## MongoDB Aggregation Pipeline
-** We leverage MongoDB's aggregation pipeline for efficient data processing and retrieval. Details of the pipeline can be found in AggregationPipeline **
+** We leverage MongoDB's aggregation pipeline for efficient data processing and retrieval. **
 
 
