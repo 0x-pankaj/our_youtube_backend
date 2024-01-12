@@ -1,0 +1,30 @@
+version: '3'
+
+
+service:
+  express-backend:
+    build: ./
+    port:
+      - "8000:8000"
+    env_file:
+      - .env
+
+
+    # environment:
+    #   - PORT=8000
+    #   - MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.vznzlsd.mongodb.net
+    #   - CORS_ORIGIN= *
+    #   - ACCESS_TOKEN_SECRET=d7vm4vBCvetpCbJENpUpvojqp50iGPYDm7yM
+    #   - ACCESS_TOKEN_EXPIRY=1d
+    #   - REFRESH_TOKEN_SECRET=o7JeWjtQxroLtbHSHtoFt1cecpMvCtsRB4E=
+    #   - REFRESH_TOKEN_EXPIRY=10d
+    #   - CLOUDINARY_CLOUD_NAME=cloudname
+    #   - CLOUDINARY_API_KEY=api_key
+    #   - CLOUDINARY_API_SECRET=api_secret
+
+  # mongodb:
+  #   image: mongodb
+  #   restart: always
+  #   environment: 
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
