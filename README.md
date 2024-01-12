@@ -18,11 +18,11 @@ Welcome to the backend repository of our YouTube-like app. This backend is respo
 - ** Video Management **
 - ** Playlist Managmet **
 - ** User Interaction **
-    - *** Likes on videos ***
-    - *** Comment on Videos **
+    - ** Likes on videos **
+    - ** Comment on Videos **
 - ** Tweet Segment ** 
-    - *** user tweet like on tweeter ***
-    - *** like on Tweet ***
+    - ** user tweet like on tweeter **
+    - ** like on Tweet **
 
 ## Prerequisites
 
