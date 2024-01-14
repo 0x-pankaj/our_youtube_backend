@@ -7,6 +7,6 @@ COPY . /app/
 
 RUN npm install
 
-EXPOSE ${PORT}
+EXPOSE 8000
 
-CMD [ "nodemon", "src/index" ]
+CMD [ "node", "src/index" ]

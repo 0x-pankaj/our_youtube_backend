@@ -130,7 +130,6 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
 
-
   const logedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
@@ -278,7 +277,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   console.log("req: ", req.body);
   const { fullName, email } = req.body;
   console.log("from updateAcoount : ");
-  console.log("fullName: ",fullName, email)
+  console.log("fullName: ", fullName, email);
   if (!fullName && !email) {
     throw new ApiError(400, "must have atleast one field to update");
   }
@@ -357,8 +356,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
-  const {userName} = req.params;
-  console.log("userName: ",userName);
+  const { userName } = req.params;
+  console.log("userName: ", userName);
   if (!userName?.trim()) {
     throw new ApiError(400, " not getting channel name from url as parameter");
   }
@@ -438,13 +437,13 @@ const getWatchHistory = asyncHandler(async (req, res) => {
   // console.log("array: ", array)
   // console.log("user id : ", req.user._id[1])
   console.log("user id: ", req.user._id);
-  console.log("new user id only: ", new mongoose.Types.ObjectId(req.user._id) );
+  console.log("new user id only: ", new mongoose.Types.ObjectId(req.user._id));
 
   try {
     const user = await User.aggregate([
       {
         $match: {
-          _id : new mongoose.Types.ObjectId(req.user._id),
+          _id: new mongoose.Types.ObjectId(req.user._id),
           // _id: req.user._id
         },
       },
@@ -483,23 +482,50 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         },
       },
     ]);
-    console.log("user from history matching: ",user);
+    console.log("user from history matching: ", user);
 
     return res
-              .status(200)
-              .json(
-                new ApiResponse(
-                  200,
-                  user[0].watchHistory,
-                  "watchHistory fetched successfully"
-                )
-              )
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          user[0].watchHistory,
+          "watchHistory fetched successfully"
+        )
+      );
   } catch (error) {
     throw new ApiError(
       400,
       error?.message || " error from user history matching"
     );
   }
+});
+
+const addVideoToWatchHistory = asyncHandler(async (req, res) => {
+  const { videoId } = req.body;
+  if (!videoId) {
+    throw new ApiError(400, "video Id is required");
+  }
+
+  await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      watchHistory: { $push: new mongoose.Types.ObjectId(videoId) },
+    },
+    {
+      new: true,
+    }
+  );
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        addVideoToWatchHistory,
+        "added video successfully to watchHistory"
+      )
+    );
 });
 
 export {
@@ -514,4 +540,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  addVideoToWatchHistory
 };
