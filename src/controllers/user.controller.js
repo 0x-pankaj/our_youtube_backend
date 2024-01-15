@@ -510,7 +510,7 @@ const addVideoToWatchHistory = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user?._id,
     {
-      watchHistory: { $push: new mongoose.Types.ObjectId(videoId) },
+      $push: {watchHistory: new mongoose.Types.ObjectId(videoId)},
     },
     {
       new: true,
